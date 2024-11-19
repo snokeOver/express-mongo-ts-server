@@ -4,7 +4,7 @@ import { IGuardian, IName, IStudent } from "./student.interface";
 const studentNameSchema = new Schema<IName>({
   firstName: {
     type: String,
-    required: true,
+    required: [true, "First name is required"],
   },
   middleName: {
     type: String,
@@ -48,11 +48,23 @@ const studentGuardianSchema = new Schema<IGuardian>({
 const studentSchema = new Schema<IStudent>({
   id: {
     type: String,
+    required: true,
+    unique: true,
   },
 
-  name: studentNameSchema,
+  name: {
+    type: studentNameSchema,
+    required: true,
+  },
 
-  gender: ["Male", "Female"],
+  gender: {
+    type: String,
+    enum: {
+      values: ["Male", "Female", "Others"],
+      message: "{VALUE} is not valid",
+    },
+    required: true,
+  },
 
   dateOfBirth: {
     type: String,
@@ -61,6 +73,7 @@ const studentSchema = new Schema<IStudent>({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
 
   contactNo: {
@@ -73,7 +86,10 @@ const studentSchema = new Schema<IStudent>({
     required: true,
   },
 
-  bloodGroup: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+  bloodGroup: {
+    type: String,
+    enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+  },
 
   presentAddress: {
     type: String,
@@ -85,13 +101,20 @@ const studentSchema = new Schema<IStudent>({
     required: true,
   },
 
-  guardian: studentGuardianSchema,
+  guardian: {
+    type: studentGuardianSchema,
+    required: true,
+  },
 
   profileImage: {
     type: String,
   },
 
-  isActive: ["Active", "blocked"],
+  isActive: {
+    type: String,
+    enum: ["Active", "blocked"],
+    default: "Active",
+  },
 });
 
 export const StudentModel = model<IStudent>("students", studentSchema);

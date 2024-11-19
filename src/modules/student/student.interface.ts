@@ -16,7 +16,7 @@ export interface IGuardian {
 export interface IStudent {
   id: string;
   name: IName;
-  gender: "Male" | "Female";
+  gender: "Male" | "Female" | "Others";
   dateOfBirth: string;
   email: string;
   contactNo: string;
