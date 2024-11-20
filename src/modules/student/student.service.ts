@@ -5,17 +5,11 @@ import { StudentModel } from "./student.model";
 
 // Create a student data
 export const createStudentDB = async (student: IStudent) => {
-  //build in static method
-  //   const result = await StudentModel.create(student);
-
-  //Build in instance method
-
-  const studentInstace = new StudentModel(student);
-
-  if (await studentInstace.isStudentExist(student.id))
+  if (await StudentModel.isStudentExist(student.id))
     throw new Error("Student already exists");
 
-  const result = await studentInstace.save();
+  const result = await StudentModel.create(student);
+
   return result;
 };
 

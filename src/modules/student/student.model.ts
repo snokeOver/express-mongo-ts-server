@@ -3,7 +3,6 @@ import {
   IGuardian,
   IName,
   IStudent,
-  IStudentMethod,
   newStudentModel,
 } from "./student.interface";
 import validator from "validator";
@@ -70,7 +69,7 @@ const studentGuardianSchema = new Schema<IGuardian>({
   },
 });
 
-const studentSchema = new Schema<IStudent, newStudentModel, IStudentMethod>({
+const studentSchema = new Schema<IStudent, newStudentModel>({
   id: {
     type: String,
     required: [true, "Student ID is required"],
@@ -154,9 +153,17 @@ const studentSchema = new Schema<IStudent, newStudentModel, IStudentMethod>({
   },
 });
 
+/*
 //custom instance method
 studentSchema.methods.isStudentExist = async function (id: string) {
   const existingStudent = await StudentModel.findOne({ id });
+  return existingStudent;
+};
+*/
+//static method
+studentSchema.statics.isStudentExist = async function (id: string) {
+  const existingStudent = await StudentModel.findOne({ id });
+
   return existingStudent;
 };
 

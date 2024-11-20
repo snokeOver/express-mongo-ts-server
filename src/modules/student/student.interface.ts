@@ -31,6 +31,8 @@ export interface IStudent {
   isActive: "Active" | "blocked";
 }
 
+//for instace method
+/*
 export interface IStudentMethod {
   isStudentExist(id: string): Promise<IStudent | null>;
 }
@@ -41,3 +43,11 @@ export type newStudentModel = Model<
   Record<string, never>,
   IStudentMethod
 >;
+
+*/
+
+//for static method
+
+export interface newStudentModel extends Model<IStudent> {
+  isStudentExist(id: string): Promise<IStudent | null>;
+}
