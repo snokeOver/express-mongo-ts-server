@@ -7,11 +7,23 @@ import {
   getAStudentDB,
 } from "./student.service";
 import { IError } from "../../types-interfaces/interfaces";
+import { studentJoiJoiValidation } from "./student.joi.validation";
 
 export const createStudent = async (req: Request, res: Response) => {
   try {
     const { student } = req.body;
-    const result = await createStudentDB(student);
+    const { error: joiError, value } =
+      studentJoiJoiValidation.validate(student);
+
+    if (joiError) {
+      return res.status(500).send({
+        success: false,
+        message: "Server error",
+        error: joiError.details,
+      });
+    }
+
+    const result = await createStudentDB(value);
     res.status(200).send({
       success: true,
       message: "Student data created successfully!",
@@ -19,7 +31,11 @@ export const createStudent = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log((error as IError).message);
-    res.status(500).send({ success: false, message: "Server error" });
+    return res.status(500).send({
+      success: false,
+      message: "Server error",
+      error: error,
+    });
   }
 };
 
@@ -33,7 +49,11 @@ export const getAllStudents = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log((error as Error).message);
-    res.status(500).send({ success: false, message: "Server error" });
+    res.status(500).send({
+      success: false,
+      message: "Server error",
+      error: (error as IError).message,
+    });
   }
 };
 
@@ -48,6 +68,10 @@ export const getAStudent = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log((error as Error).message);
-    res.status(500).send({ success: false, message: "Server error" });
+    res.status(500).send({
+      success: false,
+      message: "Server error",
+      error: (error as IError).message,
+    });
   }
 };
