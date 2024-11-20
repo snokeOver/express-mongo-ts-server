@@ -7,23 +7,15 @@ import {
   getAStudentDB,
 } from "./student.service";
 import { IError } from "../../types-interfaces/interfaces";
-import { studentJoiJoiValidation } from "./student.joi.validation";
+import { studentZodSchema } from "./student.zod.validation";
 
 export const createStudent = async (req: Request, res: Response) => {
   try {
     const { student } = req.body;
-    const { error: joiError, value } =
-      studentJoiJoiValidation.validate(student);
 
-    if (joiError) {
-      return res.status(500).send({
-        success: false,
-        message: "Server error",
-        error: joiError.details,
-      });
-    }
+    studentZodSchema.parse(student);
 
-    const result = await createStudentDB(value);
+    const result = await createStudentDB(student);
     res.status(200).send({
       success: true,
       message: "Student data created successfully!",
