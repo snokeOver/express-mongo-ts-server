@@ -25,7 +25,7 @@ export const createStudent = async (req: Request, res: Response) => {
     console.log((error as IError).message);
     return res.status(500).send({
       success: false,
-      message: "Server error",
+      message: (error as IError).message || "Server error",
       error: error,
     });
   }

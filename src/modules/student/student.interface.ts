@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export interface IName {
   firstName: string;
   middleName?: string;
@@ -28,3 +30,14 @@ export interface IStudent {
   profileImage?: string;
   isActive: "Active" | "blocked";
 }
+
+export interface IStudentMethod {
+  isStudentExist(id: string): Promise<IStudent | null>;
+}
+
+// Create a new Model type that knows about IStudentMethod...
+export type newStudentModel = Model<
+  IStudent,
+  Record<string, never>,
+  IStudentMethod
+>;

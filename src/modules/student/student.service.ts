@@ -5,7 +5,17 @@ import { StudentModel } from "./student.model";
 
 // Create a student data
 export const createStudentDB = async (student: IStudent) => {
-  const result = await StudentModel.create(student);
+  //build in static method
+  //   const result = await StudentModel.create(student);
+
+  //Build in instance method
+
+  const studentInstace = new StudentModel(student);
+
+  if (await studentInstace.isStudentExist(student.id))
+    throw new Error("Student already exists");
+
+  const result = await studentInstace.save();
   return result;
 };
 

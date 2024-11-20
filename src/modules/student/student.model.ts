@@ -1,5 +1,11 @@
 import { Schema, model } from "mongoose";
-import { IGuardian, IName, IStudent } from "./student.interface";
+import {
+  IGuardian,
+  IName,
+  IStudent,
+  IStudentMethod,
+  newStudentModel,
+} from "./student.interface";
 import validator from "validator";
 
 const studentNameSchema = new Schema<IName>({
@@ -64,7 +70,7 @@ const studentGuardianSchema = new Schema<IGuardian>({
   },
 });
 
-const studentSchema = new Schema<IStudent>({
+const studentSchema = new Schema<IStudent, newStudentModel, IStudentMethod>({
   id: {
     type: String,
     required: [true, "Student ID is required"],
@@ -148,4 +154,13 @@ const studentSchema = new Schema<IStudent>({
   },
 });
 
-export const StudentModel = model<IStudent>("students", studentSchema);
+//custom instance method
+studentSchema.methods.isStudentExist = async function (id: string) {
+  const existingStudent = await StudentModel.findOne({ id });
+  return existingStudent;
+};
+
+export const StudentModel = model<IStudent, newStudentModel>(
+  "students",
+  studentSchema
+);
